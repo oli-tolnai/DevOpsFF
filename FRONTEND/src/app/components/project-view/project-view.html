@@ -56,24 +56,31 @@
           <div class="row">
             <div class="col-md-12 mb-3" *ngFor="let issue of project.issues">
               <div class="card border-start border-4" [ngClass]="{
-                'border-danger': issue.status === IssueStatus.Open,
-                'border-warning': issue.status === IssueStatus.InProgress,
-                'border-info': issue.status === IssueStatus.Resolved,
-                'border-success': issue.status === IssueStatus.Closed
+                'border-danger': issue.status === 'New',
+                'border-warning': issue.status === 'In Progress',
+                'border-info': issue.status === 'Resolved',
+                'border-success': issue.status === 'Closed'
               }">
                 <div class="card-body">
                   <div class="d-flex justify-content-between align-items-start">
                     <div class="flex-grow-1">
                       <h5 class="card-title">{{ issue.title }}</h5>
                       <p class="card-text text-muted">{{ issue.description }}</p>
-                      <small class="text-muted">
-                        Created: {{ issue.createdAt | date:'medium' }}
-                      </small>
                     </div>
-                    <div>
+                    <div class="d-flex flex-column align-items-end gap-2">
                       <span class="badge" [ngClass]="getStatusBadgeClass(issue.status)">
                         {{ getStatusText(issue.status) }}
                       </span>
+                      <select 
+                        class="form-select form-select-sm" 
+                        style="width: auto;"
+                        [(ngModel)]="issue.status"
+                        (change)="updateIssueStatus(issue.id, issue.status)"
+                        [disabled]="loading">
+                        <option *ngFor="let status of availableStatuses" [value]="status">
+                          {{ status }}
+                        </option>
+                      </select>
                     </div>
                   </div>
                 </div>

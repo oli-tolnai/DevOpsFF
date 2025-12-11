@@ -21,14 +21,6 @@ export interface IssueViewDto {
   id: string;
   title: string;
   description: string;
-  status: IssueStatus;
-  createdAt: Date;
+  status: string;
   assignedUserId?: string;
-}
-
-export enum IssueStatus {
-  Open = 0,
-  InProgress = 1,
-  Resolved = 2,
-  Closed = 3
 }

@@ -24,50 +24,50 @@
   </div>
 
   <div *ngIf="!loading && !error && projects.length > 0" class="card shadow">
-    <div class="card-body">
-      <table class="table table-hover">
-        <thead class="table-light">
+    <div class="card-body p-0">
+      <table class="table table-hover table-dark mb-0">
+        <thead>
           <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
-            <th scope="col" class="text-center">Active Issues</th>
-            <th scope="col" class="text-center">Actions</th>
+            <th scope="col" class="px-4 py-3">Name</th>
+            <th scope="col" class="px-4 py-3">Description</th>
+            <th scope="col" class="text-center px-4 py-3">Active Issues</th>
+            <th scope="col" class="text-center px-4 py-3">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let project of projects">
-            <td class="fw-bold">{{ project.name }}</td>
-            <td>{{ project.description }}</td>
-            <td class="text-center">
+            <td class="fw-bold px-4 py-3">{{ project.name }}</td>
+            <td class="px-4 py-3">{{ project.description }}</td>
+            <td class="text-center px-4 py-3">
               <span class="badge bg-primary rounded-pill">
                 {{ project.activeIssues }}
               </span>
             </td>
-            <td class="text-center">
-              <div class="btn-group" role="group">
+            <td class="text-center px-4 py-3">
+              <div class="d-flex justify-content-center gap-2">
                 <button 
-                  class="btn btn-sm btn-outline-info" 
+                  class="btn btn-sm btn-action btn-action-view" 
                   (click)="viewProject(project.id)"
                   title="View Project">
-                  <i class="bi bi-eye"></i> View
+                  <i class="bi bi-eye-fill"></i>
                 </button>
                 <button 
-                  class="btn btn-sm btn-outline-warning" 
+                  class="btn btn-sm btn-action btn-action-edit" 
                   (click)="editProject(project.id)"
                   title="Edit Project">
-                  <i class="bi bi-pencil"></i> Edit
+                  <i class="bi bi-pencil-fill"></i>
                 </button>
                 <button 
-                  class="btn btn-sm btn-outline-success" 
+                  class="btn btn-sm btn-action btn-action-add" 
                   (click)="addNewIssue(project.id)"
                   title="Add New Issue">
-                  <i class="bi bi-plus"></i> Add Issue
+                  <i class="bi bi-plus-circle-fill"></i>
                 </button>
                 <button 
-                  class="btn btn-sm btn-outline-danger" 
+                  class="btn btn-sm btn-action btn-action-delete" 
                   (click)="deleteProject(project.id)"
                   title="Delete Project">
-                  <i class="bi bi-trash"></i> Delete
+                  <i class="bi bi-trash-fill"></i>
                 </button>
               </div>
             </td>

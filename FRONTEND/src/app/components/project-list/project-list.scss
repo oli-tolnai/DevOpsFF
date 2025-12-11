@@ -1,0 +1,25 @@
+.table {
+  table-layout: fixed;
+  
+  th, td {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  // Column widths
+  th:nth-child(1), td:nth-child(1) { // Name
+    width: 20%;
+  }
+  
+  th:nth-child(2), td:nth-child(2) { // Description
+    width: 45%;
+  }
+  
+  th:nth-child(3), td:nth-child(3) { // Active Issues
+    width: 15%;
+  }
+  
+  th:nth-child(4), td:nth-child(4) { // Actions
+    width: 20%;
+  }
+}

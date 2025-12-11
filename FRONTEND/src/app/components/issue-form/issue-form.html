@@ -37,6 +37,21 @@
                 [disabled]="loading"></textarea>
             </div>
 
+            <div class="mb-3">
+              <label for="priority" class="form-label">Priority <span class="text-danger">*</span></label>
+              <select 
+                class="form-select" 
+                id="priority" 
+                name="priority"
+                [(ngModel)]="issue.priority" 
+                required
+                [disabled]="loading">
+                <option [ngValue]="1">High</option>
+                <option [ngValue]="2">Medium</option>
+                <option [ngValue]="3">Low</option>
+              </select>
+            </div>
+
             <div class="d-flex justify-content-end gap-2">
               <button 
                 type="button" 

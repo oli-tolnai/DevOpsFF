@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
-import { ProjectViewDto, IssueViewDto, IssueStatus } from '../../models/project.model';
+import { IssueService } from '../../services/issue.service';
+import { ProjectViewDto, IssueViewDto } from '../../models/project.model';
 
 @Component({
   selector: 'app-project-view',
@@ -13,12 +14,13 @@ export class ProjectView implements OnInit {
   project: ProjectViewDto | null = null;
   loading = false;
   error: string | null = null;
-  IssueStatus = IssueStatus;
+  availableStatuses = ['New', 'In Progress', 'Resolved', 'Closed'];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private issueService: IssueService
   ) { }
 
   ngOnInit(): void {
@@ -44,34 +46,23 @@ export class ProjectView implements OnInit {
     });
   }
 
-  getStatusBadgeClass(status: IssueStatus): string {
+  getStatusBadgeClass(status: string): string {
     switch (status) {
-      case IssueStatus.Open:
+      case 'New':
         return 'bg-danger';
-      case IssueStatus.InProgress:
+      case 'In Progress':
         return 'bg-warning';
-      case IssueStatus.Resolved:
+      case 'Resolved':
         return 'bg-info';
-      case IssueStatus.Closed:
+      case 'Closed':
         return 'bg-success';
       default:
         return 'bg-secondary';
     }
   }
 
-  getStatusText(status: IssueStatus): string {
-    switch (status) {
-      case IssueStatus.Open:
-        return 'Open';
-      case IssueStatus.InProgress:
-        return 'In Progress';
-      case IssueStatus.Resolved:
-        return 'Resolved';
-      case IssueStatus.Closed:
-        return 'Closed';
-      default:
-        return 'Unknown';
-    }
+  getStatusText(status: string): string {
+    return status || 'Unknown';
   }
 
   editProject(): void {
@@ -88,5 +79,19 @@ export class ProjectView implements OnInit {
 
   backToList(): void {
     this.router.navigate(['/projects']);
+  }
+
+  updateIssueStatus(issueId: string, newStatus: string): void {
+    this.issueService.updateIssueStatus(issueId, { status: newStatus }).subscribe({
+      next: () => {
+        if (this.project) {
+          this.loadProject(this.project.id);
+        }
+      },
+      error: (err) => {
+        this.error = 'Failed to update issue status. Please try again.';
+        console.error('Error updating issue status:', err);
+      }
+    });
   }
 }

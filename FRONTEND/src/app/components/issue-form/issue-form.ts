@@ -13,7 +13,8 @@ export class IssueForm implements OnInit {
   issue: IssueCreateDto = {
     title: '',
     description: '',
-    projectId: ''
+    projectId: '',
+    priority: 2
   };
   loading = false;
   error: string | null = null;
@@ -33,7 +34,7 @@ export class IssueForm implements OnInit {
   }
 
   onSubmit(): void {
-    if (!this.issue.title || !this.issue.description || !this.issue.projectId) {
+    if (!this.issue.title || !this.issue.description || !this.issue.projectId || !this.issue.priority) {
       this.error = 'Please fill in all fields.';
       return;
     }

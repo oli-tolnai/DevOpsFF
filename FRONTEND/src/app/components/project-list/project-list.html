@@ -1,0 +1,79 @@
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="display-4">View Projects</h1>
+    <button class="btn btn-primary btn-lg" (click)="createNewProject()">
+      <i class="bi bi-plus-circle"></i> Create New Project
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3">Loading projects...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    {{ error }}
+    <button class="btn btn-sm btn-outline-danger ms-3" (click)="loadProjects()">Retry</button>
+  </div>
+
+  <div *ngIf="!loading && !error && projects.length === 0" class="alert alert-info text-center" role="alert">
+    <h4>No projects found</h4>
+    <p>Get started by creating your first project!</p>
+  </div>
+
+  <div *ngIf="!loading && !error && projects.length > 0" class="card shadow">
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead class="table-light">
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col" class="text-center">Active Issues</th>
+            <th scope="col" class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let project of projects">
+            <td class="fw-bold">{{ project.name }}</td>
+            <td>{{ project.description }}</td>
+            <td class="text-center">
+              <span class="badge bg-primary rounded-pill">
+                {{ project.activeIssues }}
+              </span>
+            </td>
+            <td class="text-center">
+              <div class="btn-group" role="group">
+                <button 
+                  class="btn btn-sm btn-outline-info" 
+                  (click)="viewProject(project.id)"
+                  title="View Project">
+                  <i class="bi bi-eye"></i> View
+                </button>
+                <button 
+                  class="btn btn-sm btn-outline-warning" 
+                  (click)="editProject(project.id)"
+                  title="Edit Project">
+                  <i class="bi bi-pencil"></i> Edit
+                </button>
+                <button 
+                  class="btn btn-sm btn-outline-success" 
+                  (click)="addNewIssue(project.id)"
+                  title="Add New Issue">
+                  <i class="bi bi-plus"></i> Add Issue
+                </button>
+                <button 
+                  class="btn btn-sm btn-outline-danger" 
+                  (click)="deleteProject(project.id)"
+                  title="Delete Project">
+                  <i class="bi bi-trash"></i> Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

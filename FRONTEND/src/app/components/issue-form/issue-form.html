@@ -1,0 +1,62 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-header bg-success text-white">
+          <h2 class="mb-0">Create New Issue</h2>
+        </div>
+        <div class="card-body">
+          <div *ngIf="error" class="alert alert-danger" role="alert">
+            {{ error }}
+          </div>
+
+          <form (ngSubmit)="onSubmit()" #issueForm="ngForm">
+            <div class="mb-3">
+              <label for="title" class="form-label">Issue Title <span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="title" 
+                name="title"
+                [(ngModel)]="issue.title" 
+                required
+                placeholder="Enter issue title"
+                [disabled]="loading">
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+              <textarea 
+                class="form-control" 
+                id="description" 
+                name="description"
+                [(ngModel)]="issue.description" 
+                rows="5"
+                required
+                placeholder="Enter issue description"
+                [disabled]="loading"></textarea>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+              <button 
+                type="button" 
+                class="btn btn-secondary" 
+                (click)="cancel()"
+                [disabled]="loading">
+                <i class="bi bi-x-circle"></i> Cancel
+              </button>
+              <button 
+                type="submit" 
+                class="btn btn-success"
+                [disabled]="loading || !issueForm.form.valid">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                <i *ngIf="!loading" class="bi bi-plus-circle"></i>
+                Create Issue
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

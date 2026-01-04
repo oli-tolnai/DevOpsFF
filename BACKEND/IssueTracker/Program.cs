@@ -20,28 +20,30 @@ namespace IssueTracker
             var builder = WebApplication.CreateBuilder(args);
 
             //CORS only angular
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAngularDev",
-                    policy =>
-                    {
-                        policy.WithOrigins("http://localhost:4200")
-                              .AllowAnyHeader()
-                              .AllowAnyMethod();
-                    });
-            });
+            // builder.Services.AddCors(options =>
+            // {
+            //     options.AddPolicy("AllowAngularDev",
+            //         policy =>
+            //         {
+            //             policy.WithOrigins("http://localhost:4200")
+            //                   .AllowAnyHeader()
+            //                   .AllowAnyMethod();
+            //         });
+            // });
 
             // CORS AllowAll
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll",
-                    policy =>
-                    {
-                        policy.AllowAnyOrigin()
-                              .AllowAnyHeader()
-                              .AllowAnyMethod();
-                    });
-            });
+            // builder.Services.AddCors(options =>
+            // {
+            //     options.AddPolicy("AllowAll",
+            //         policy =>
+            //         {
+            //             policy.AllowAnyOrigin()
+            //                   .AllowAnyHeader()
+            //                   .AllowAnyMethod();
+            //         });
+            // });
+
+            builder.Services.AddCors();
 
 
 
@@ -83,13 +85,15 @@ namespace IssueTracker
                     ValidateAudience = true,
                     ValidAudience = "issuetracker.com",
                     ValidIssuer = "issuetracker.com",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("HosszútitkosítókulcsHosszútitkosítókulcsHosszútitkosítókulcsHosszútitkosítókulcsHosszútitkosítókulcsHosszútitkosítókulcsHosszútitkosítókulcsHosszútitkosítókulcsHosszútitkosítókulcs"))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Hosszï¿½titkosï¿½tï¿½kulcsHosszï¿½titkosï¿½tï¿½kulcsHosszï¿½titkosï¿½tï¿½kulcsHosszï¿½titkosï¿½tï¿½kulcsHosszï¿½titkosï¿½tï¿½kulcsHosszï¿½titkosï¿½tï¿½kulcsHosszï¿½titkosï¿½tï¿½kulcsHosszï¿½titkosï¿½tï¿½kulcsHosszï¿½titkosï¿½tï¿½kulcs"))
                 };
             }); ;
 
             builder.Services.AddDbContext<IssueTrackerContext>(options =>
             {
-                options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=IssueTrackerDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True");
+                // options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=IssueTrackerDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True");
+                options.UseSqlServer(builder.Configuration["db:conn"]);
+
                 options.UseLazyLoadingProxies();
             });
 
@@ -133,6 +137,16 @@ namespace IssueTracker
     });
             });
 
+
+            if (builder.Environment.IsProduction())
+            {
+                builder.WebHost.ConfigureKestrel(options =>
+                {
+                    options.ListenAnyIP(int.Parse(builder.Configuration["settings:port"] ?? "6500"));
+                });
+            }
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -144,8 +158,11 @@ namespace IssueTracker
 
             app.UseHttpsRedirection();
 
-            app.UseCors("AllowAngularDev");
-            app.UseCors("AllowAll");
+            app.UseCors(t => t
+                    .WithOrigins(builder.Configuration["settings:frontend"] ?? "http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .AllowAnyMethod());
 
             app.UseAuthentication();
             app.UseAuthorization();

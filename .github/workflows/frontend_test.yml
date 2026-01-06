@@ -102,7 +102,11 @@ jobs:
             sudo cp /var/frontend/.htaccess "$NEW_RELEASE/" || true
             
             # Symlink csere atomikusan
-            sudo ln -sfn "$NEW_RELEASE" "$CURRENT"
+            # sudo ln -sfn "$NEW_RELEASE" "$CURRENT" EZ ROSSZ?
+            
+            sudo rm -f "$BASE/current"
+            sudo ln -s "$NEW_RELEASE" "$BASE/current"
+
             
             # Apache reload
             sudo systemctl reload apache2

@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 })
 export class IssueService {
   // private get apiUrl() { return `${this.configService.cfg.backendUrl}/api/Issue`; }
-  private apiUrl = `${environment.apiUrl}/api/Issue`;
+  private apiUrl = `${environment.backendUrl}/api/Issue`;
 
   constructor(private http: HttpClient) { }
 

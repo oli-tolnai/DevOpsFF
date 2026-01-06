@@ -45,6 +45,20 @@ namespace IssueTracker
 
             builder.Services.AddCors();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("FrontendPolicy", policy =>
+                {
+                    policy
+                        .WithOrigins(
+                            "https://issuetracker.hu",
+                            "https://test.issuetracker.hu"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
 
 
             // Add services to the container.
@@ -164,6 +178,7 @@ namespace IssueTracker
                     .AllowCredentials()
                     .AllowAnyMethod());
 
+            app.UseCors("FrontendPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
 

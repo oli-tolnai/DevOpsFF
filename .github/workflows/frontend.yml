@@ -46,7 +46,7 @@ jobs:
           cat "$FILE" || true
           echo
           echo "Felülírás a backendUrl érékre..."
-          sed -i "s#backendUrl:[[:space:]]*['\"][^'\"]*['\"]#backendUrl: '${{ env.BACKEND_URL }}'#" "$FILE"
+          sed -i "s#backendUrl: .*#backendUrl: '${{ env.BACKEND_URL }}',#" "$FILE"
           echo "Új environment.ts tartalom:"
           cat "$FILE" || true
           

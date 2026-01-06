@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProjectShortViewDto, ProjectViewDto, ProjectCreateUpdateDto } from '../models/project.model';
 import { ConfigService } from './config-service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
-  private get apiUrl() { return `${this.configService.cfg.backendUrl}/api/Project`; }
+  // private get apiUrl() { return `${this.configService.cfg.backendUrl}/api/Project`; }
+  private apiUrl = `${environment.apiUrl}/api/Project`;
 
   constructor(private http: HttpClient, private configService: ConfigService) { }
 

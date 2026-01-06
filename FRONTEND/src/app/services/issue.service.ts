@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IssueCreateDto, IssueStatusUpdateDto } from '../models/issue.model';
 import { ConfigService } from './config-service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IssueService {
-  private get apiUrl() { return `${this.configService.cfg.backendUrl}/api/Issue`; }
+  // private get apiUrl() { return `${this.configService.cfg.backendUrl}/api/Issue`; }
+  private apiUrl = `${environment.apiUrl}/api/Issue`;
 
   constructor(private http: HttpClient, private configService: ConfigService) { }
 

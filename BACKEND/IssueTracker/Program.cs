@@ -43,7 +43,21 @@ namespace IssueTracker
             //         });
             // });
 
-            builder.Services.AddCors();
+
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("FrontendPolicy", policy =>
+                {
+                    policy
+                        .WithOrigins(
+                            "https://issuetracker.hu",
+                            "https://test.issuetracker.hu"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
 
 
 
@@ -143,6 +157,7 @@ namespace IssueTracker
                 builder.WebHost.ConfigureKestrel(options =>
                 {
                     options.ListenAnyIP(int.Parse(builder.Configuration["settings:port"] ?? "6500"));
+                    options.ListenAnyIP(6500);
                 });
             }
 
@@ -158,12 +173,8 @@ namespace IssueTracker
 
             app.UseHttpsRedirection();
 
-            app.UseCors(t => t
-                    .WithOrigins(builder.Configuration["settings:frontend"] ?? "http://localhost:4200")
-                    .AllowAnyHeader()
-                    .AllowCredentials()
-                    .AllowAnyMethod());
 
+            app.UseCors("FrontendPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
 

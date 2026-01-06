@@ -9,7 +9,6 @@ import { ProjectList } from './components/project-list/project-list';
 import { ProjectView } from './components/project-view/project-view';
 import { ProjectForm } from './components/project-form/project-form';
 import { IssueForm } from './components/issue-form/issue-form';
-import { ConfigService } from './services/config-service';
 
 @NgModule({
   declarations: [
@@ -28,12 +27,6 @@ import { ConfigService } from './services/config-service';
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (cfg: ConfigService) => () => cfg.load(),
-      deps: [ConfigService],
-      multi: true
-    }
   ],
   bootstrap: [App]
 })

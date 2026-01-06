@@ -43,7 +43,7 @@ namespace IssueTracker
             //         });
             // });
 
-            builder.Services.AddCors();
+
 
             builder.Services.AddCors(options =>
             {
@@ -172,11 +172,6 @@ namespace IssueTracker
 
             app.UseHttpsRedirection();
 
-            app.UseCors(t => t
-                    .WithOrigins(builder.Configuration["settings:frontend"] ?? "http://localhost:4200")
-                    .AllowAnyHeader()
-                    .AllowCredentials()
-                    .AllowAnyMethod());
 
             app.UseCors("FrontendPolicy");
             app.UseAuthentication();

@@ -157,6 +157,7 @@ namespace IssueTracker
                 builder.WebHost.ConfigureKestrel(options =>
                 {
                     options.ListenAnyIP(int.Parse(builder.Configuration["settings:port"] ?? "6500"));
+                    options.ListenAnyIP(6500);
                 });
             }
 

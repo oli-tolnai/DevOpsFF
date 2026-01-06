@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProjectShortViewDto, ProjectViewDto, ProjectCreateUpdateDto } from '../models/project.model';
-import { ConfigService } from './config-service';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -12,7 +11,7 @@ export class ProjectService {
   // private get apiUrl() { return `${this.configService.cfg.backendUrl}/api/Project`; }
   private apiUrl = `${environment.apiUrl}/api/Project`;
 
-  constructor(private http: HttpClient, private configService: ConfigService) { }
+  constructor(private http: HttpClient) { }
 
   getAllProjects(): Observable<ProjectShortViewDto[]> {
     return this.http.get<ProjectShortViewDto[]>(this.apiUrl);

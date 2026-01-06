@@ -3,7 +3,7 @@ name: Deploy Backend to Test
 on:
   push:
     branches: [ "development" ]
-
+        
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -15,16 +15,16 @@ jobs:
       RUNTIME: linux-x64
       SELF_CONTAINED: "true"
       PUBLISH_SINGLE_FILE: "true"
-      # TEST könyvtárak (Debian szerveren)
+      # Remote könyvtárak (a Debian szerveren)
       REMOTE_BASE: /var/backend_test
       REMOTE_RELEASES: /var/backend_test/releases
-      # REMOTE_CURRENT: /var/backend_test/current
+      REMOTE_CURRENT: /var/backend_test/current
       SERVICE_NAME: issuetrackerbackend_test
       FRONTEND_URL: https://test.issuetracker.hu
       SSH_HOST: test.issuetracker.hu
       SSH_USER: root
-      # --- SECRET-ek ---
-      # SSH_KEY, SSH_PASS, DB_CONN_TEST (új!)
+      # --- SECRET-ek (Repo Settings -> Secrets and variables -> Actions) ---
+      # SSH_KEY, SSH_PASS, DB_CONN_TEST
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -99,30 +99,22 @@ jobs:
             sudo tar -xzf "/tmp/app-${{ github.sha }}.tar.gz" -C "$NEW_RELEASE"
             sudo rm -f "/tmp/app-${{ github.sha }}.tar.gz"
             
-            # appsettings.json módosítása (DB_CONN_TEST + test frontend URL)
+            # appsettings.json módosítása (db:conn + settings:frontend -> secretből)
             if command -v jq >/dev/null; then
               sudo jq \
                 --arg conn "${{ secrets.DB_CONN_TEST }}" \
                 --arg frontend "${{ env.FRONTEND_URL }}" \
-                '.db.conn = $conn | .settings.frontend = $frontend' | .settings.port = "6501"' \
+                '.db.conn = $conn | .settings.frontend = $frontend | .settings.port = "6501"' \
                 "$NEW_RELEASE/appsettings.json" | sudo tee "$NEW_RELEASE/appsettings.json.tmp" > /dev/null
               sudo mv "$NEW_RELEASE/appsettings.json.tmp" "$NEW_RELEASE/appsettings.json"
             else
-              echo "jq nincs telepítve, telepítem..."
-              sudo apt-get update && sudo apt-get install -y jq
-              sudo jq \
-                --arg conn "${{ secrets.DB_CONN_TEST }}" \
-                --arg frontend "${{ env.FRONTEND_URL }}" \
-                '.db.conn = $conn | .settings.frontend = $frontend' | .settings.port = "6501"' \
-                "$NEW_RELEASE/appsettings.json" | sudo tee "$NEW_RELEASE/appsettings.json.tmp" > /dev/null
-              sudo mv "$NEW_RELEASE/appsettings.json.tmp" "$NEW_RELEASE/appsettings.json"
+              echo "jq nincs telepítve, telepíteni kell!"
+              exit 1
             fi
             
+            
             # Symlink csere atomikusan
-            # sudo ln -sfn "$NEW_RELEASE" "$CURRENT" EZ ROSSZ?
-            sudo rm -f "$BASE/current"
-            sudo ln -s "$NEW_RELEASE" "$BASE/current"
-
+            sudo ln -sfn "$NEW_RELEASE" "$CURRENT"
             
             # Service újraindítás + engedélyezés
             sudo systemctl daemon-reload || true
@@ -130,7 +122,7 @@ jobs:
             sudo systemctl enable "$SERVICE" || true
             
             # Régi release-ek törlése (tartsunk meg 5-öt)
-            COUNT=$(ls -1dt "$RELEASES"/* 2>/dev/null | wc -l || true)
+            COUNT=$(ls -1dt "$RELEASES"/* | wc -l || true)
             if [ "$COUNT" -gt 5 ]; then
               ls -1dt "$RELEASES"/* | tail -n +6 | xargs -r sudo rm -rf
             fi

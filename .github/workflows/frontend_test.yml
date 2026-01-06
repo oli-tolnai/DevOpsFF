@@ -13,7 +13,7 @@ jobs:
       DIST_DIR: FRONTEND/dist/FRONTEND/browser
       REMOTE_BASE: /var/frontend_test
       REMOTE_RELEASES: /var/frontend_test/releases
-      REMOTE_CURRENT: /var/frontend_test/current
+      # REMOTE_CURRENT: /var/frontend_test/curren
       BACKEND_URL: https://test.api.issuetracker.hu
       SSH_HOST: test.issuetracker.hu
       SSH_USER: root
@@ -102,7 +102,11 @@ jobs:
             sudo cp /var/frontend/.htaccess "$NEW_RELEASE/" || true
             
             # Symlink csere atomikusan
-            sudo ln -sfn "$NEW_RELEASE" "$CURRENT"
+            # sudo ln -sfn "$NEW_RELEASE" "$CURRENT" EZ ROSSZ?
+            
+            sudo rm -f "$BASE/current"
+            sudo ln -s "$NEW_RELEASE" "$BASE/current"
+
             
             # Apache reload
             sudo systemctl reload apache2

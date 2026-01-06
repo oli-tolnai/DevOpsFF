@@ -119,7 +119,10 @@ jobs:
             fi
             
             # Symlink csere atomikusan
-            sudo ln -sfn "$NEW_RELEASE" "$CURRENT"
+            # sudo ln -sfn "$NEW_RELEASE" "$CURRENT" EZ ROSSZ?
+            sudo rm -f "$BASE/current"
+            sudo ln -s "$NEW_RELEASE" "$BASE/current"
+
             
             # Service újraindítás + engedélyezés
             sudo systemctl daemon-reload || true
